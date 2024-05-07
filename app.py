@@ -5,7 +5,8 @@ import model.regression as regression
 import model.knn_regression as knn_regression
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 if 'file' not in st.session_state:
@@ -50,16 +51,28 @@ if st.session_state.columns:
     btn_cleanNull = st.button("Xử lý dữ liệu")
 
     option_chart = st.selectbox('Biểu đồ',['1 Biến phân loại','1 Biến định lượng','2 Biến phân loại', '1 Biến phân loại 1 biến định lượng','2 Biến định lượng'])
-    option_columns_chart =  st.selectbox('Chọn biến',st.session_state.columns )
-    btn_chart = st.button("Thống kê")
 
+    if option_chart == "1 Biến phân loại" or option_chart == '1 Biến định lượng' :
+        option_columns_chart =  st.selectbox('Chọn biến',st.session_state.columns )
+    elif option_chart == '2 Biến phân loại' or option_chart == '1 Biến phân loại 1 biến định lượng' or option_chart == '2 Biến định lượng':
+        option_columns_chart2 = st.selectbox('Chọn biến (1)', st.session_state.columns, key='selectbox2')
+        option_columns_chart3 = st.selectbox('Chọn biến (2)', st.session_state.columns, key='selectbox3')
+
+    btn_chart = st.button("Thống kê")
     if btn_chart:
-        if option_chart == "1 Biến phân loại":
+        if option_chart == "1 Biến phân loại" or option_chart == '1 Biến định lượng':
             st.write('Biểu đồ cột thống kê tần suất:')
             fig, ax = plt.subplots(figsize=(8, 6))
             sns.countplot(data=st.session_state.df, x=option_columns_chart, ax=ax)
             st.pyplot(fig)
             st.write('Biểu đồ cột thống kê tần suất:')
+        if option_chart == '2 Biến phân loại' or option_chart == '1 Biến phân loại 1 biến định lượng' or option_chart == '2 Biến định lượng':
+            fig, ax = plt.subplots()
+            ax.scatter(st.session_state.df[option_columns_chart2], st.session_state.df[option_columns_chart3])
+            ax.set_xlabel(option_columns_chart2)
+            ax.set_ylabel(option_columns_chart3)
+            ax.set_title('Biểu đồ scatter plot thống kê hai biến')
+            st.pyplot(fig)
 
     if btn_cleanNull:
         if option_data == 'Xóa dữ liệu null':
@@ -79,6 +92,15 @@ if st.session_state.columns:
 
     options2 = st.multiselect('Chọn biến độc lập', st.session_state.columns)
     st.write('Biến độc lập của bạn:', options2)
+
+    btn_vector = st.button('Change Vector')
+    
+    if btn_vector : 
+        X_train, X_test, y_train, y_test = train_test_split(st.session_state.df[options2], st.session_state.df[option], test_size=0.2, random_state=42)
+        tfidf_vectorizer = TfidfVectorizer()
+        X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
+        X_test_tfidf = tfidf_vectorizer.transform(X_test)
+        st.write(X_train_tfidf)
 
     options3 = st.selectbox('Chọn mô hình', ['Logistic', 'Regression' , 'KNN'])
 
