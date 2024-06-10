@@ -3,7 +3,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.datasets import load_iris
 import pandas as pd
 import numpy as np
-def logistic(d_f, bien_muc_tieu, bien_doc_lap):
+
+
+def logisticRegression(d_f, bien_muc_tieu, bien_doc_lap):
     X = d_f[bien_doc_lap]
     y = d_f[bien_muc_tieu]
 

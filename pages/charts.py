@@ -1,11 +1,7 @@
 import streamlit as st
 import pandas as pd
-import model.logistic as logistic
-import model.regression as regression
-import model.knn_regression as knn_regression
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 st.set_option('deprecation.showPyplotGlobalUse', False)
 

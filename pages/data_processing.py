@@ -5,6 +5,8 @@ import seaborn as sns
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+label_encoder = LabelEncoder()
 
 if 'file' not in st.session_state:
     st.session_state.file = None
@@ -77,7 +79,7 @@ def outliers():
             btn2 = st.button("Xử lý dữ liệu")
 
         if btn1:
-            outliers_indices = outliers.detect_outliers(st.session_state.df[option_columns])
+            outliers_indices = detect_outliers(st.session_state.df[option_columns])
             st.write("Kết quả phát hiện ngoại lệ:")
             st.write(outliers_indices)
         if btn2:
@@ -92,6 +94,7 @@ def outliers():
 
     else:
         st.warning("Vui lòng nhập dataset")
+
 # Function Outliers
 def visualize_outliers(df, column):
     plt.figure(figsize=(8, 6))
@@ -115,6 +118,25 @@ def impute_outliers(df, column):
     df.loc[outliers_indices, column] = median_value
     return df
 
+def one_hot_encoding() :
+    if st.session_state.df is not None and not st.session_state.df.empty:
+        option = st.selectbox("Chọn biến", st.session_state.columns, placeholder="Chọn biến")
+        col1 ,col2 ,col3 = st.columns(3)
+        with col1 :
+            btn1 = st.button("Xem unique")
+        with col2 :
+            btn2 = st.button("Dùng One-Hot Encoding")
+        with col3 :
+            btn3 = st.button("Dùng Label Encoding")    
+
+        if btn1 :
+            st.write(st.session_state.df[option].unique())
+        if btn2 :
+            st.session_state.df[option] = label_encoder.fit_transform(st.session_state.df[option])
+            st.write(st.session_state.df[option].unique())
+        if btn3 :
+            st.session_state.df[option] = label_encoder.fit_transform(st.session_state.df[option])
+            st.write(st.session_state.df[option].unique())
 # Function Duplicate
 def duplicate() :
     st.title('📞 Duplicate')
@@ -122,6 +144,7 @@ def duplicate() :
 router.add_route('missing_value', missing_value)
 router.add_route('outliers', outliers)
 router.add_route('duplicate', duplicate)
+router.add_route('one_hot_encoding', one_hot_encoding)
 
 if st.sidebar.button('🔍 MissingValue'):
     st.session_state.page = 'missing_value'
@@ -129,6 +152,8 @@ if st.sidebar.button('📈 Outliers'):
     st.session_state.page = 'outliers'
 if st.sidebar.button('🔄 Duplicate'):
     st.session_state.page = 'duplicate'
+if st.sidebar.button('One-Hot Encoding and Label Encoding'):
+    st.session_state.page = 'one_hot_encoding'
 
 if 'page' not in st.session_state:
     st.session_state.page = 'missing_value' 

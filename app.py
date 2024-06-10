@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import model.logistic as logistic
-import model.regression as regression
+import model.linearRegression as linearRegression
 import model.knn_regression as knn_regression
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -103,9 +103,7 @@ if st.session_state.columns:
         st.write(X_train_tfidf)
 
     options3 = st.selectbox('Chọn mô hình', ['Logistic', 'Regression' , 'KNN'])
-
     btn_train = st.button("Train")
-
     option4 = st.selectbox("Chọn loại biểu đồ",['Biểu đồ đường','Biểu đồ cột'])
 
     if btn_train:
@@ -115,7 +113,7 @@ if st.session_state.columns:
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.area_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             elif options3 == "Regression" :
-                y_pred, y_test, accuracy = regression.linearRegression(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = linearRegression.linearRegression(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.area_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             else :
@@ -128,7 +126,7 @@ if st.session_state.columns:
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.line_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             elif options3 == "Regression" :
-                y_pred, y_test, accuracy = regression.linearRegression(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = linearRegression.linearRegression(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.line_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             else :
