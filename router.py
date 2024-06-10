@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import io
+import matplotlib.pyplot as plt
 
 class StreamlitRouter:
     def __init__(self):
@@ -25,6 +26,7 @@ if 'columns' not in st.session_state:
 if 'df' not in st.session_state:
     st.session_state.df = None
 
+# Function Home
 def home():
     select_file = st.file_uploader("Chọn file")
     if select_file is not None:
@@ -48,7 +50,8 @@ def home():
         else:
             st.warning('Vui lòng chọn dataset')
 
-def thong_tin_du_lieu():
+# Function Overview
+def overview():
     if st.session_state.df is not None and not st.session_state.df.empty:
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -84,7 +87,7 @@ def thong_tin_du_lieu():
         st.warning("Vui lòng nhập dataset")
 
 router.add_route('Home', home)
-router.add_route('thong_tin_du_lieu', thong_tin_du_lieu)
+router.add_route('overview', overview)
 
 if 'page' not in st.session_state:
     st.session_state.page = 'Home'  
@@ -103,9 +106,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if st.sidebar.button('🏠 Nhập dataset'):
+if st.sidebar.button('📝 Nhập dataset'):
     st.session_state.page = 'Home'
 if st.sidebar.button('📋 Xem dữ liệu'):
-    st.session_state.page = 'thong_tin_du_lieu'
+    st.session_state.page = 'overview'
 
 router.route(st.session_state.page)

@@ -1,13 +1,10 @@
 import streamlit as st
-import pandas as pd
-import model.logistic as logistic
-import model.regression as regression
-import model.knn_regression as knn_regression
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 st.set_option('deprecation.showPyplotGlobalUse', False)
+import seaborn as sns
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
 
 if 'file' not in st.session_state:
     st.session_state.file = None
@@ -31,6 +28,7 @@ class StreamlitRouter:
 
 router = StreamlitRouter()
 
+# Function MissingValue
 def missing_value() :
     if  st.session_state.df is not None and not st.session_state.df.empty:
         col1, col2 = st.columns(2)
@@ -62,8 +60,62 @@ def missing_value() :
                st.write(st.session_state.df.isnull().sum())
     else:
         st.warning("Vui lòng nhập dataset")
-def outliers() :
-    st.title('📞 outliers')
+
+# Function Outliers
+def outliers():
+    if st.session_state.df is not None and not st.session_state.df.empty:
+        col1, col2 = st.columns(2)
+        with col1:
+            option_columns = st.selectbox('Chọn dữ liệu phân tích', st.session_state.df.columns)
+        with col2:
+            option_action = st.selectbox('Lựa chọn', ['Xóa outliers', 'Lấy trung bình outliers', 'Trực quan hóa outliers'])
+        
+        col3, col4 = st.columns(2)
+        with col3:
+            btn1 = st.button("Kiểm tra Outliers")
+        with col4:
+            btn2 = st.button("Xử lý dữ liệu")
+
+        if btn1:
+            outliers_indices = outliers.detect_outliers(st.session_state.df[option_columns])
+            st.write("Kết quả phát hiện ngoại lệ:")
+            st.write(outliers_indices)
+        if btn2:
+            if option_action == 'Xóa outliers':
+                st.session_state.df = remove_outliers(st.session_state.df, option_columns)
+                st.write("Xóa outliers")
+            elif option_action == 'Lấy trung bình outliers':
+                st.session_state.df = impute_outliers(st.session_state.df, option_columns)
+                st.write("Lấy trung bình outliers")
+            elif option_action == 'Trực quan hóa outliers':
+                visualize_outliers(st.session_state.df, option_columns)
+
+    else:
+        st.warning("Vui lòng nhập dataset")
+# Function Outliers
+def visualize_outliers(df, column):
+    plt.figure(figsize=(8, 6))
+    sns.boxplot(data=df, x=column)
+    plt.title(f'Box Plot of {column}')
+    st.pyplot()
+
+def detect_outliers(data, threshold=3):
+    z_scores = (data - data.mean()) / data.std()
+    outliers_indices = z_scores[abs(z_scores) > threshold].index
+    return outliers_indices
+
+def remove_outliers(df, column):
+    outliers_indices = detect_outliers(df[column])
+    df_cleaned = df.drop(outliers_indices)
+    return df_cleaned
+
+def impute_outliers(df, column):
+    outliers_indices = detect_outliers(df[column])
+    median_value = df[column].median()
+    df.loc[outliers_indices, column] = median_value
+    return df
+
+# Function Duplicate
 def duplicate() :
     st.title('📞 Duplicate')
 
@@ -71,11 +123,11 @@ router.add_route('missing_value', missing_value)
 router.add_route('outliers', outliers)
 router.add_route('duplicate', duplicate)
 
-if st.sidebar.button('🏠 MissingValue'):
+if st.sidebar.button('🔍 MissingValue'):
     st.session_state.page = 'missing_value'
-if st.sidebar.button('📋 Outliers'):
+if st.sidebar.button('📈 Outliers'):
     st.session_state.page = 'outliers'
-if st.sidebar.button('📋 Duplicate'):
+if st.sidebar.button('🔄 Duplicate'):
     st.session_state.page = 'duplicate'
 
 if 'page' not in st.session_state:
