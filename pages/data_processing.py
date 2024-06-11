@@ -29,7 +29,7 @@ class StreamlitRouter:
             st.error('404 - Page Not Found')
 
 router = StreamlitRouter()
-
+st.sidebar.markdown("<h1 style='text-align: center; color: #ff6347;'>Xử lý dữ liệu</h1>", unsafe_allow_html=True)
 # Function MissingValue
 def missing_value() :
     if  st.session_state.df is not None and not st.session_state.df.empty:
@@ -121,20 +121,15 @@ def impute_outliers(df, column):
 def one_hot_encoding() :
     if st.session_state.df is not None and not st.session_state.df.empty:
         option = st.selectbox("Chọn biến", st.session_state.columns, placeholder="Chọn biến")
-        col1 ,col2 ,col3 = st.columns(3)
+        col1 ,col2  = st.columns(2)
         with col1 :
             btn1 = st.button("Xem unique")
         with col2 :
-            btn2 = st.button("Dùng One-Hot Encoding")
-        with col3 :
-            btn3 = st.button("Dùng Label Encoding")    
+            btn2 = st.button("Dùng One-Hot Encoding")  
 
         if btn1 :
             st.write(st.session_state.df[option].unique())
         if btn2 :
-            st.session_state.df[option] = label_encoder.fit_transform(st.session_state.df[option])
-            st.write(st.session_state.df[option].unique())
-        if btn3 :
             st.session_state.df[option] = label_encoder.fit_transform(st.session_state.df[option])
             st.write(st.session_state.df[option].unique())
 # Function Duplicate
@@ -152,7 +147,7 @@ if st.sidebar.button('📈 Outliers'):
     st.session_state.page = 'outliers'
 if st.sidebar.button('🔄 Duplicate'):
     st.session_state.page = 'duplicate'
-if st.sidebar.button('One-Hot Encoding and Label Encoding'):
+if st.sidebar.button('One-Hot Encoding'):
     st.session_state.page = 'one_hot_encoding'
 
 if 'page' not in st.session_state:

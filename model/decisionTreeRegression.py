@@ -1,8 +1,8 @@
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import r2_score
-def linearRegression(d_f, bien_muc_tieu, bien_doc_lap):
+def decisionTreeRegression(d_f, bien_muc_tieu, bien_doc_lap):
 
     X = d_f[bien_doc_lap]
     y = d_f[bien_muc_tieu]
@@ -13,11 +13,10 @@ def linearRegression(d_f, bien_muc_tieu, bien_doc_lap):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-
-    model = LinearRegression()
+    model = DecisionTreeRegressor(random_state=42)
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
     accuracy = (r2_score(y_test,y_pred))
     
-    return y_pred, y_test, accuracy, model
+    return model ,y_pred, y_test, accuracy 

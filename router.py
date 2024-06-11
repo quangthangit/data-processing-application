@@ -92,7 +92,7 @@ router.add_route('overview', overview)
 if 'page' not in st.session_state:
     st.session_state.page = 'Home'  
 
-st.sidebar.markdown("<h1 style='text-align: center; color: #ff6347;'>Streamlit App</h1>", unsafe_allow_html=True)
+st.sidebar.markdown("<h1 style='text-align: center; color: #ff6347;'>Trang chủ</h1>", unsafe_allow_html=True)
 st.markdown(
     """
     <style>

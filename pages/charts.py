@@ -11,7 +11,7 @@ if 'columns' not in st.session_state:
     st.session_state.columns = []
 if 'df' not in st.session_state:
     st.session_state.df = None
-
+st.sidebar.markdown("<h1 style='text-align: center; color: #ff6347;'>Thống kê</h1>", unsafe_allow_html=True)
 class StreamlitRouter:
     def __init__(self):
         self.routes = {}
@@ -31,28 +31,49 @@ router = StreamlitRouter()
 def univariate():
     if st.session_state.df is not None and not st.session_state.df.empty:
         option_columns = st.selectbox('Chọn biến cần thống kê', st.session_state.df.columns)
-    
-        st.subheader(f"Biểu đồ cho cột {option_columns}")
-        fig, ax = plt.subplots()
+        option_columns2 = st.selectbox('Chọn biểu đồ cần thống kê', ['Biểu đồ cột','Biểu đồ tròn','Biểu đồ phân tán'])
 
-        column_data = st.session_state.df[option_columns]
-        unique_values = column_data.nunique()
+        if option_columns2 == 'Biểu đồ cột':
+            st.subheader(f"Biểu đồ cho cột {option_columns}")
+            fig, ax = plt.subplots()
+            column_data = st.session_state.df[option_columns]
+            unique_values = column_data.nunique()
 
-        if unique_values <= 50:
-            unique_counts = column_data.value_counts()
-            sns.barplot(x=unique_counts.index, y=unique_counts.values, ax=ax)
-            ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-            ax.set_xlabel('Giá trị dữ liệu')
-            ax.set_ylabel('Số lượng')
-        else:
-            binned_data = pd.cut(column_data, bins=10)  
-            counts = binned_data.value_counts().sort_index()
-            sns.barplot(x=counts.index.astype(str), y=counts.values, ax=ax)
-            ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
-            ax.set_xlabel('Khoảng giá trị')
-            ax.set_ylabel('Số lượng')
+            if unique_values <= 50:
+                unique_counts = column_data.value_counts()
+                sns.barplot(x=unique_counts.index, y=unique_counts.values, ax=ax)
+                ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+                ax.set_xlabel('Giá trị dữ liệu')
+                ax.set_ylabel('Số lượng')
+            else:
+                binned_data = pd.cut(column_data, bins=10)  
+                counts = binned_data.value_counts().sort_index()
+                sns.barplot(x=counts.index.astype(str), y=counts.values, ax=ax)
+                ax.set_xticklabels(ax.get_xticklabels(), rotation=45)
+                ax.set_xlabel('Khoảng giá trị')
+                ax.set_ylabel('Số lượng')
+            
+            st.pyplot(fig)
         
-        st.pyplot(fig)
+        elif option_columns2 == 'Biểu đồ tròn':
+            st.subheader(f"Biểu đồ tròn {option_columns}")
+            fig, ax = plt.subplots()
+            column_data = st.session_state.df[option_columns]
+            unique_counts = column_data.value_counts()
+            ax.pie(unique_counts, labels = unique_counts.index, autopct='%1.1f%%')
+            ax.set_ylabel('')
+            ax.set_title(f'Phân phối của biến {option_columns}')
+            st.pyplot(fig)
+        
+        elif option_columns2 == 'Biểu đồ phân tán':
+            st.subheader(f"Biểu đồ phân tán {option_columns}")
+            fig, ax = plt.subplots()
+            sns.histplot(data=st.session_state.df, x=option_columns, ax=ax)
+            ax.set_xlabel(option_columns)
+            ax.set_ylabel('Số lượng')
+            ax.set_title(f'Phân phối của biến {option_columns}')
+            st.pyplot(fig)
+            
     else:
         st.warning("Vui lòng nhập dataset")
 
