@@ -25,8 +25,8 @@ class StreamlitRouter:
     def route(self, path):
         if path in self.routes:
             self.routes[path]()
-        else:
-            st.error('404 - Page Not Found')
+        # else:
+        #     # st.error('404 - Page Not Found')
 
 router = StreamlitRouter()
 st.sidebar.markdown("<h1 style='text-align: center; color: #ff6347;'>Xử lý dữ liệu</h1>", unsafe_allow_html=True)
@@ -149,6 +149,13 @@ if st.sidebar.button('🔄 Duplicate'):
     st.session_state.page = 'duplicate'
 if st.sidebar.button('One-Hot Encoding'):
     st.session_state.page = 'one_hot_encoding'
+if st.sidebar.button('Dowload dataset'):
+    st.download_button(
+        label="Download data as CSV",
+        data=st.session_state.df.to_csv(index=False).encode('utf-8'),
+        file_name='downloaded_data.csv',
+        mime='text/csv',)
+
 
 if 'page' not in st.session_state:
     st.session_state.page = 'missing_value' 

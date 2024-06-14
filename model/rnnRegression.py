@@ -2,7 +2,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
-def cnn_regression(d_f, bien_muc_tieu, bien_doc_lap):
+def rnn_regression(d_f, bien_muc_tieu, bien_doc_lap):
 
     X = d_f[bien_doc_lap]
     y = d_f[bien_muc_tieu]

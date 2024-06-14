@@ -31,7 +31,7 @@ router = StreamlitRouter()
 def univariate():
     if st.session_state.df is not None and not st.session_state.df.empty:
         option_columns = st.selectbox('Chọn biến cần thống kê', st.session_state.df.columns)
-        option_columns2 = st.selectbox('Chọn biểu đồ cần thống kê', ['Biểu đồ cột','Biểu đồ tròn','Biểu đồ phân tán'])
+        option_columns2 = st.selectbox('Chọn biểu đồ cần thống kê', ['Biểu đồ cột','Biểu đồ tròn'])
 
         if option_columns2 == 'Biểu đồ cột':
             st.subheader(f"Biểu đồ cho cột {option_columns}")
@@ -62,15 +62,6 @@ def univariate():
             unique_counts = column_data.value_counts()
             ax.pie(unique_counts, labels = unique_counts.index, autopct='%1.1f%%')
             ax.set_ylabel('')
-            ax.set_title(f'Phân phối của biến {option_columns}')
-            st.pyplot(fig)
-        
-        elif option_columns2 == 'Biểu đồ phân tán':
-            st.subheader(f"Biểu đồ phân tán {option_columns}")
-            fig, ax = plt.subplots()
-            sns.histplot(data=st.session_state.df, x=option_columns, ax=ax)
-            ax.set_xlabel(option_columns)
-            ax.set_ylabel('Số lượng')
             ax.set_title(f'Phân phối của biến {option_columns}')
             st.pyplot(fig)
             

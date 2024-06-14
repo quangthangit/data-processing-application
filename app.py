@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
-import model.logistic as logistic
+import model.logisticRegression as logisticRegression
 import model.linearRegression as linearRegression
-import model.knn_regression as knn_regression
+import model.rnnRegression as rnnRegression
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -109,7 +109,7 @@ if st.session_state.columns:
     if btn_train:
         if option4 == "Biểu đồ đường" : 
             if options3 == "Logistic" :
-                y_pred, y_test, accuracy = logistic.logistic(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = logisticRegression.logistic(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.area_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             elif options3 == "Regression" :
@@ -117,12 +117,12 @@ if st.session_state.columns:
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.area_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             else :
-                y_pred, y_test, accuracy = knn_regression.knn_regression(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = rnnRegression.knn_regression(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.area_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
         else :
             if options3 == "Logistic" :
-                y_pred, y_test, accuracy = logistic.logistic(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = logisticRegression.logistic(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.line_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             elif options3 == "Regression" :
@@ -130,7 +130,7 @@ if st.session_state.columns:
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.line_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
             else :
-                y_pred, y_test, accuracy = knn_regression.knn_regression(st.session_state.df, option, options2)
+                y_pred, y_test, accuracy = rnnRegression.knn_regression(st.session_state.df, option, options2)
                 st.success(f"Độ chính xác của mô hình là: {accuracy * 100:.2f}%")
                 st.line_chart(pd.DataFrame({'Dự đoán': y_pred, 'Kết quả thực tế': y_test.values}))
 

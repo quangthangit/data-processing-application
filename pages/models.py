@@ -268,7 +268,7 @@ if st.sidebar.button('🔍 Linear Regression'):
     st.session_state.page = 'linear_regression'
 if st.sidebar.button('🔍 Logistic Regression'):
     st.session_state.page = 'logistic_regression'
-if st.sidebar.button('🔍 CNN Regression'):
+if st.sidebar.button('🔍 RWNN Regression'):
     st.session_state.page = 'rnn_regression'
 if st.sidebar.button('🔍 RandomForest Regression'):
     st.session_state.page = 'randomForest_Regression'
